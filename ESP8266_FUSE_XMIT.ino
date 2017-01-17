@@ -13,7 +13,7 @@
 
 const char* ssid = "FUSE";
 const char* password = "SKUNKWORKS_1!";
-const char* host = "192.168.0.1";
+const char* host = "192.168.0.2";
 
 bool state = false;
 
@@ -38,36 +38,35 @@ void setup()
   Serial.println(WiFi.localIP());
 
   state = digitalRead(GPIO2);
-  //set up server
-  //server.begin();
-  //server.setNoDelay(true);
-
 }
 
 WiFiClient cli;
 
 void loop() 
 {
-  
   bool newState = digitalRead(GPIO2);
+  
   if(newState != state)
   {
-    Serial.print("State: ");
-    Serial.println(state);
+    Serial.print("State: "); 
     state = newState;
-
-    if(cli.connect(host,4000))
+    Serial.println(state);
+    
+    if(cli.connect(host,4000)) //should use 4 param?
     {
-        cli.println(state);
+        if(state)
+          cli.println("1");
+        else
+          cli.println("0");
 
-        while(cli.connected())
+       /* while(cli.connected())
         {
           if(cli.available())
           {
             String line = cli.readStringUntil('\n');
             Serial.println(line);
           }
-        }
+        } */
         
         cli.stop();
     }
